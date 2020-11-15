@@ -8,15 +8,15 @@ import drawing
 import lyrics
 from rnn import rnn
 
-
 class Hand(object):
 
     def __init__(self):
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+        self.current_folder = os.path.dirname(os.path.abspath(__file__))
         self.nn = rnn(
             log_dir='logs',
-            checkpoint_dir='checkpoints',
-            prediction_dir='predictions',
+            checkpoint_dir=self.current_folder + '/checkpoints',
+            prediction_dir=self.current_folder + '/predictions',
             learning_rates=[.0001, .00005, .00002],
             batch_sizes=[32, 64, 64],
             patiences=[1500, 1000, 500],
@@ -73,8 +73,8 @@ class Hand(object):
 
         if styles is not None:
             for i, (cs, style) in enumerate(zip(lines, styles)):
-                x_p = np.load('styles/style-{}-strokes.npy'.format(style))
-                c_p = np.load('styles/style-{}-chars.npy'.format(style)).tostring().decode('utf-8')
+                x_p = np.load(self.current_folder + '/styles/style-{}-strokes.npy'.format(style))
+                c_p = np.load(self.current_folder + '/styles/style-{}-chars.npy'.format(style)).tostring().decode('utf-8')
 
                 c_p = str(c_p) + " " + cs
                 c_p = drawing.encode_ascii(c_p)
